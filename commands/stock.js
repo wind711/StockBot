@@ -1,4 +1,3 @@
-let token = 'bvtt3a748v6pijnf025g';
 const { SystemChannelFlags } = require("discord.js");
 const fetch = require("node-fetch");
 
@@ -11,7 +10,7 @@ module.exports = {
         }
         for (let i = 0; i < args.length; i++) {
             let ticker = args[i].toUpperCase();
-            let url = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${token}`;
+            let url = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${process.env['stockToken']}`;
             fetch(url)
                 .then((response) => {
                     return response.json()
