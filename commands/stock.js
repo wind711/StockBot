@@ -20,7 +20,20 @@ module.exports = {
                         if (ticker === "GME") {
                             message.channel.send(':rocket:')
                         };
-                        message.channel.send(`${ticker}: $${data.c}`);
+                        var priceCurrent = data.c.toLocaleString();
+                        var priceDifference = data.c - data.pc;
+                        var diffPercent = priceDifference/data.pc * 100;
+                        console.log(diffPercent);
+                        if (priceDifference > 0) {
+                            priceDifference = priceDifference.toFixed(2);
+                            console.log(priceDifference);
+                            priceDifference = `+${priceDifference}`;
+                        } else {
+                            priceDifference = priceDifference.toFixed(2);
+                        }
+
+                        
+                        message.channel.send(`${ticker}: $${priceCurrent} USD ${priceDifference} (${diffPercent.toFixed(2)}%)`);
                     } else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
                 }) 
                 .catch((err) => {
