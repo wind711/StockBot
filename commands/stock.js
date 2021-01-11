@@ -2,7 +2,7 @@ const { SystemChannelFlags } = require("discord.js");
 const fetch = require("node-fetch");
 
 module.exports = {
-    name: 'stock',
+    name: 'stonk',
     description: "stock info",
     execute(message, args) {
         if (!args.length) {
@@ -20,13 +20,13 @@ module.exports = {
                         if (ticker === "GME") {
                             message.channel.send(':rocket:')
                         };
-                        var priceCurrent = data.c.toLocaleString();
+                        try {var priceCurrent = data.c.toLocaleString();
+                        }catch (error) {
+                        }
                         var priceDifference = data.c - data.pc;
                         var diffPercent = priceDifference/data.pc * 100;
-                        console.log(diffPercent);
                         if (priceDifference > 0) {
                             priceDifference = priceDifference.toFixed(2);
-                            console.log(priceDifference);
                             priceDifference = `+${priceDifference}`;
                         } else {
                             priceDifference = priceDifference.toFixed(2);

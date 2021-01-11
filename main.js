@@ -30,8 +30,12 @@ client.on('message', message => {
         client.commands.get('ping').execute(message, args);
     }
 
-    if(command === 'stock'){
-        client.commands.get('stock').execute(message, args);
+    if(command === 'help'){
+        client.commands.get('help').execute(message, args);
+    }
+
+    if(command === 'stonk'){
+        client.commands.get('stonk').execute(message, args);
     }
 });
 
