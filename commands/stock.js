@@ -18,6 +18,9 @@ module.exports = {
                 })
                 .then((data) => {
                     if(data.c != 0) {
+                        if (ticker === "GME") {
+                            message.channel.send(':rocket:')
+                        };
                         message.channel.send(`${ticker}: $${data.c}`);
                     } else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
                 }) 
