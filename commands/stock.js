@@ -8,6 +8,7 @@ module.exports = {
         if (!args.length) {
             return message.channel.send(`You didn't provide a stock ticker, ${message.author}!`);
         }
+
         for (let i = 0; i < args.length; i++) {
             let ticker = args[i].toUpperCase();
             let url = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${process.env['stockToken']}`;
@@ -20,11 +21,16 @@ module.exports = {
                         const stockEmbed = new Discord.MessageEmbed()
                             .setAuthor(ticker)
                             .setTimestamp()
-                            .setURL(`https://finance.yahoo.com/quote/${ticker}`);
+                            .setURL(`https://finance.yahoo.com/quote/${ticker}`)
+                            .addFields(
+                                { name: 'Previous Close', value: `${parseFloat(data.pc).toFixed(2)}`, inline: true },
+                                { name: 'Open', value: `${parseFloat(data.o).toFixed(2)}`, inline: true },
+                                { name: 'Day\'s range', value: `${parseFloat(data.l).toFixed(2)} - ${parseFloat(data.h).toFixed(2)}`, inline: true },
+                            );
                         if (ticker === "GME") {
                             message.channel.send(':rocket:')
                         };
-                        try {var priceCurrent = data.c.toLocaleString();
+                        try {var priceCurrent = data.c;
                         }catch (error) {
                         }
                         var priceDifference = data.c - data.pc;
@@ -34,12 +40,13 @@ module.exports = {
                             priceDifference = `+${priceDifference}`;
                             stockEmbed.setColor('GREEN');
 
-                        } else {
+                        } else if (priceDifference < 0){
                             priceDifference = priceDifference.toFixed(2);
                             stockEmbed.setColor('RED');
+                        } else {
+                            stockEmbed.setColor('GREY');
                         }
-
-                        stockEmbed.setTitle(`$${priceCurrent} USD ${priceDifference} (${diffPercent.toFixed(2)}%)`);
+                        stockEmbed.setTitle(`$${parseFloat(priceCurrent).toFixed(2)} USD ${priceDifference} (${diffPercent.toFixed(2)}%)`);
                         message.channel.send({embed:stockEmbed});
                     } else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
                 }) 
