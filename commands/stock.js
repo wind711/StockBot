@@ -1,6 +1,10 @@
 const fetch = require("node-fetch");
 const Discord = require('discord.js');
 
+function unique(value, index, self) {
+    return self.indexOf(value) === index;
+}
+
 module.exports = {
     name: 'stonk',
     description: "stock info",
@@ -8,9 +12,11 @@ module.exports = {
         if (!args.length) {
             return message.channel.send(`You didn't provide a stock ticker, ${message.author}!`);
         }
-
-        for (let i = 0; i < args.length; i++) {
-            let ticker = args[i].toUpperCase();
+        var tickerList = args;
+        tickerList = tickerList.map(function(x){return x.toUpperCase(); });
+        tickerList = tickerList.filter(unique);
+        for (let i = 0; i < tickerList.length; i++) {
+            let ticker = tickerList[i];
             let url = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${process.env['stockToken']}`;
             fetch(url)
                 .then((response) => {
@@ -50,8 +56,8 @@ module.exports = {
                         message.channel.send({embed:stockEmbed});
                     } else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
                 }) 
-                .catch((err) => {
-                    console.log(err);
+                .catch(() => {
+                    message.channel.send(`You might have the wrong ticker: ${ticker}`)
                 })
         }
     }
