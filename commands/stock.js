@@ -1,5 +1,5 @@
-const { SystemChannelFlags } = require("discord.js");
 const fetch = require("node-fetch");
+const Discord = require('discord.js');
 
 module.exports = {
     name: 'stonk',
@@ -17,6 +17,10 @@ module.exports = {
                 })
                 .then((data) => {
                     if(data.c != 0) {
+                        const stockEmbed = new Discord.MessageEmbed()
+                            .setAuthor(ticker)
+                            .setTimestamp()
+                            .setURL(`https://finance.yahoo.com/quote/${ticker}`);
                         if (ticker === "GME") {
                             message.channel.send(':rocket:')
                         };
@@ -28,12 +32,15 @@ module.exports = {
                         if (priceDifference > 0) {
                             priceDifference = priceDifference.toFixed(2);
                             priceDifference = `+${priceDifference}`;
+                            stockEmbed.setColor('GREEN');
+
                         } else {
                             priceDifference = priceDifference.toFixed(2);
+                            stockEmbed.setColor('RED');
                         }
 
-                        
-                        message.channel.send(`${ticker}: $${priceCurrent} USD ${priceDifference} (${diffPercent.toFixed(2)}%)`);
+                        stockEmbed.setTitle(`$${priceCurrent} USD ${priceDifference} (${diffPercent.toFixed(2)}%)`);
+                        message.channel.send({embed:stockEmbed});
                     } else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
                 }) 
                 .catch((err) => {
