@@ -34,8 +34,8 @@ client.on('message', message => {
         client.commands.get('help').execute(message, args);
     }
 
-    if(command === 'stonk'){
-        client.commands.get('stonk').execute(message, args);
+    if(command === 'stonk' || command === 's'){
+        client.commands.get('stock').execute(message, args);
     }
 });
 

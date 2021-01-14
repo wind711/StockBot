@@ -6,7 +6,7 @@ function unique(value, index, self) {
 }
 
 module.exports = {
-    name: 'stonk',
+    name: 'stock',
     description: "stock info",
     execute(message, args) {
         if (!args.length) {
@@ -29,35 +29,34 @@ module.exports = {
                             .setTimestamp()
                             .setURL(`https://finance.yahoo.com/quote/${ticker}`)
                             .addFields(
-                                { name: 'Previous Close', value: `${parseFloat(data.pc).toFixed(2)}`, inline: true },
-                                { name: 'Open', value: `${parseFloat(data.o).toFixed(2)}`, inline: true },
-                                { name: 'Day\'s range', value: `${parseFloat(data.l).toFixed(2)} - ${parseFloat(data.h).toFixed(2)}`, inline: true },
+                                { name: 'Previous Close', value: `${parseFloat(data.pc).toLocaleString(undefined, {maximumFractionDigits: 2})}`, inline: true },
+                                { name: 'Open', value: `${parseFloat(data.o).toLocaleString(undefined, {maximumFractionDigits: 2})}`, inline: true },
+                                { name: 'Day\'s range', value: `${parseFloat(data.l).toLocaleString(undefined, {maximumFractionDigits: 2})} - ${parseFloat(data.h).toLocaleString(undefined, {maximumFractionDigits: 2})}`, inline: true },
                             );
                         if (ticker === "GME") {
-                            message.channel.send(':rocket:')
+                            message.channel.send(':rocket:');
                         };
-                        try {var priceCurrent = data.c;
-                        }catch (error) {
-                        }
+                        var priceCurrent = parseFloat(data.c);
                         var priceDifference = data.c - data.pc;
                         var diffPercent = priceDifference/data.pc * 100;
                         if (priceDifference > 0) {
-                            priceDifference = priceDifference.toFixed(2);
+                            priceDifference = priceDifference.toLocaleString(undefined, {maximumFractionDigits: 2})
                             priceDifference = `+${priceDifference}`;
                             stockEmbed.setColor('GREEN');
 
                         } else if (priceDifference < 0){
-                            priceDifference = priceDifference.toFixed(2);
+                            priceDifference = priceDifference.toLocaleString(undefined, {maximumFractionDigits: 2})
                             stockEmbed.setColor('RED');
                         } else {
                             stockEmbed.setColor('GREY');
                         }
-                        stockEmbed.setTitle(`$${parseFloat(priceCurrent).toFixed(2)} USD ${priceDifference} (${diffPercent.toFixed(2)}%)`);
+                        var fPrice = parseFloat(priceCurrent);
+                        stockEmbed.setTitle(`$${fPrice.toLocaleString(undefined, {maximumFractionDigits: 2})} USD ${priceDifference} (${diffPercent.toLocaleString(undefined, {maximumFractionDigits: 2})}%)`);
                         message.channel.send({embed:stockEmbed});
                     } else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
                 }) 
-                .catch(() => {
-                    message.channel.send(`You might have the wrong ticker: ${ticker}`)
+                .catch((error) => {
+                    message.channel.send(`You might have the wrong ticker: ${ticker}`);
                 })
         }
     }
