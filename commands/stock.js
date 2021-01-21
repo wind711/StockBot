@@ -8,51 +8,51 @@ function unique(value, index, self) {
 module.exports = {
     name: 'stock',
     description: "stock info",
-    execute(message, args) {
+    async execute(message, args) {
         if (!args.length) {
             return message.channel.send(`You didn't provide a stock ticker, ${message.author}!`);
         }
-        var tickerList = args;
-        tickerList = tickerList.map(function(x){return x.toUpperCase(); });
+        let tickerList = args;
+        tickerList = tickerList.map(function (x) { return x.toUpperCase(); });
         tickerList = tickerList.filter(unique);
         for (let i = 0; i < tickerList.length; i++) {
             let ticker = tickerList[i];
             let url = `https://finnhub.io/api/v1/quote?symbol=${ticker}&token=${process.env['stockToken']}`;
-            fetch(url)
+            await fetch(url)
                 .then((response) => {
                     return response.json()
                 })
                 .then((data) => {
-                    if(data.c != 0) {
+                    if (data.c != 0) {
                         const stockEmbed = new Discord.MessageEmbed()
                             .setAuthor(ticker)
                             .setTimestamp()
                             .setURL(`https://finance.yahoo.com/quote/${ticker}`)
                             .addFields(
-                                { name: 'Previous Close', value: `${parseFloat(data.pc).toLocaleString(undefined, {maximumFractionDigits: 2})}`, inline: true },
-                                { name: 'Open', value: `${parseFloat(data.o).toLocaleString(undefined, {maximumFractionDigits: 2})}`, inline: true },
-                                { name: 'Day\'s range', value: `${parseFloat(data.l).toLocaleString(undefined, {maximumFractionDigits: 2})} - ${parseFloat(data.h).toLocaleString(undefined, {maximumFractionDigits: 2})}`, inline: true },
+                                { name: 'Previous Close', value: `${parseFloat(data.pc).toLocaleString(undefined, { maximumFractionDigits: 2 })}`, inline: true },
+                                { name: 'Open', value: `${parseFloat(data.o).toLocaleString(undefined, { maximumFractionDigits: 2 })}`, inline: true },
+                                { name: 'Day\'s range', value: `${parseFloat(data.l).toLocaleString(undefined, { maximumFractionDigits: 2 })} - ${parseFloat(data.h).toLocaleString(undefined, { maximumFractionDigits: 2 })}`, inline: true },
                             );
-                        var priceCurrent = parseFloat(data.c);
-                        var priceDifference = data.c - data.pc;
-                        var diffPercent = priceDifference/data.pc * 100;
+                        let priceCurrent = parseFloat(data.c);
+                        let priceDifference = data.c - data.pc;
+                        let diffPercent = priceDifference / data.pc * 100;
                         if (priceDifference > 0) {
-                            priceDifference = priceDifference.toLocaleString(undefined, {maximumFractionDigits: 2})
+                            priceDifference = priceDifference.toLocaleString(undefined, { maximumFractionDigits: 2 })
                             priceDifference = `+${priceDifference}`;
                             stockEmbed.setColor('GREEN');
 
-                        } else if (priceDifference < 0){
-                            priceDifference = priceDifference.toLocaleString(undefined, {maximumFractionDigits: 2})
+                        } else if (priceDifference < 0) {
+                            priceDifference = priceDifference.toLocaleString(undefined, { maximumFractionDigits: 2 })
                             stockEmbed.setColor('RED');
                         } else {
                             stockEmbed.setColor('GREY');
                         }
-                        var fPrice = parseFloat(priceCurrent);
-                        stockEmbed.setTitle(`$${fPrice.toLocaleString(undefined, {maximumFractionDigits: 2})} USD ${priceDifference} (${diffPercent.toLocaleString(undefined, {maximumFractionDigits: 2})}%)`);
-                        message.channel.send({embed:stockEmbed});
+                        let fPrice = parseFloat(priceCurrent);
+                        stockEmbed.setTitle(`$${fPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })} USD ${priceDifference} (${diffPercent.toLocaleString(undefined, { maximumFractionDigits: 2 })}%)`);
+                        message.channel.send({ embed: stockEmbed });
                     }
-                    else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
-                }) 
+                    else { message.channel.send(`You might have the wrong ticker: ${ticker}`) };
+                })
                 .catch((error) => {
                     console.log(error);
                     message.channel.send(`You might have the wrong ticker: ${ticker}`);
