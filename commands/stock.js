@@ -33,9 +33,6 @@ module.exports = {
                                 { name: 'Open', value: `${parseFloat(data.o).toLocaleString(undefined, {maximumFractionDigits: 2})}`, inline: true },
                                 { name: 'Day\'s range', value: `${parseFloat(data.l).toLocaleString(undefined, {maximumFractionDigits: 2})} - ${parseFloat(data.h).toLocaleString(undefined, {maximumFractionDigits: 2})}`, inline: true },
                             );
-                        if (ticker === "GME") {
-                            message.channel.send(':rocket:');
-                        };
                         var priceCurrent = parseFloat(data.c);
                         var priceDifference = data.c - data.pc;
                         var diffPercent = priceDifference/data.pc * 100;
@@ -53,9 +50,11 @@ module.exports = {
                         var fPrice = parseFloat(priceCurrent);
                         stockEmbed.setTitle(`$${fPrice.toLocaleString(undefined, {maximumFractionDigits: 2})} USD ${priceDifference} (${diffPercent.toLocaleString(undefined, {maximumFractionDigits: 2})}%)`);
                         message.channel.send({embed:stockEmbed});
-                    } else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
+                    }
+                    else {message.channel.send(`You might have the wrong ticker: ${ticker}`)};
                 }) 
                 .catch((error) => {
+                    console.log(error);
                     message.channel.send(`You might have the wrong ticker: ${ticker}`);
                 })
         }
