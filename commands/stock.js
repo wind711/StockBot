@@ -58,5 +58,8 @@ module.exports = {
                     message.channel.send(`You might have the wrong ticker: ${ticker}`);
                 })
         }
+        message.delete({ timeout: 30000 })
+            .then(msg => console.log(`Deleted message from ${msg.author.username}`))
+            .catch(console.error);
     }
 }

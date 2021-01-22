@@ -26,7 +26,8 @@ module.exports = {
     name: 'watchlist',
     description: "watchlist command",
     async execute(message, client, command, args) {
-        const commandArgs = args;
+        console.log(command);
+        const commandArgs = args.join(' ');
         if (command === 'addlist') {
             const splitArgs = commandArgs.split(' ');
             const tagName = splitArgs.shift();
@@ -50,7 +51,7 @@ module.exports = {
                 }
                 return message.reply('Something went wrong with adding a list.');
             }
-        } else if (command === 'list') {
+        } else if (command === 'list' || command === 'l') {
             const tagName = commandArgs;
     
             // equivalent to: SELECT * FROM tags WHERE name = 'tagName' LIMIT 1;
@@ -61,9 +62,7 @@ module.exports = {
                 if (tag.get('description') != '') 
                 {
                     try {
-                        console.log(tag.get('description'));
                         var input = tag.get('description').split(' ');
-                        console.log(client.commands);
                         return client.commands.get('stock').execute(message, input);
                     } catch (error) {
                         console.log(error);

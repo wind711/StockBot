@@ -61,6 +61,7 @@ client.on('message', message => {
             client.commands.get('stock').execute(message, args);
             break;
         case 'addlist':
+        case 'l':
         case 'list':
         case 'editlist':
         case 'listinfo':
