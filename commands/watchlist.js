@@ -28,7 +28,7 @@ module.exports = {
     async execute(message, client, command, args) {
         console.log(command);
         const commandArgs = args.join(' ');
-        if (command === 'addlist') {
+        if (command === 'addlist' || command === 'al') {
             const splitArgs = commandArgs.split(' ');
             const tagName = splitArgs.shift();
             if (tagName === '') {
@@ -70,7 +70,7 @@ module.exports = {
                 }
             }
             return message.reply(`Could not find list: ${tagName}`);
-        } else if (command === 'editlist') {
+        } else if (command === 'editlist' || command === 'el') {
             const splitArgs = commandArgs.split(' ');
             const tagName = splitArgs.shift();
             const tagDescription = splitArgs.join(' ');
@@ -91,12 +91,12 @@ module.exports = {
                 ${tag.get('description')}`);
             }
             return message.reply(`Could not find list: ${tagName}`);
-        } else if (command === 'showlists') {
+        } else if (command === 'showlists' || command === 'sl') {
             // equivalent to: SELECT name FROM tags;
             const tagList = await Tags.findAll({ attributes: ['name'] });
             const tagString = tagList.map(t => t.name).join(', ') || 'No lists set.';
             return message.channel.send(`Lists: ${tagString}`);
-        } else if (command === 'removelist') {
+        } else if (command === 'removelist' || command === 'rl') {
             const tagName = commandArgs;
             // equivalent to: DELETE from tags WHERE name = ?;
             const rowCount = await Tags.destroy({ where: { name: tagName } });

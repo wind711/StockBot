@@ -50,7 +50,11 @@ module.exports = {
                         let fPrice = parseFloat(priceCurrent);
                         stockEmbed.setTitle(`$${fPrice.toLocaleString(undefined, { maximumFractionDigits: 2 })} USD ${priceDifference} (${diffPercent.toLocaleString(undefined, { maximumFractionDigits: 2 })}%)`);
                         message.channel.send({ embed: stockEmbed });
-                    }
+                        //     .then((m) =>{
+                        //     const refreshEmbed = new Discord.MessageEmbed(stockEmbed).setTitle(ticker);
+                        //     m.edit({ embed: refreshEmbed });
+                        // });
+                    }   
                     else { message.channel.send(`You might have the wrong ticker: ${ticker}`) };
                 })
                 .catch((error) => {
@@ -58,8 +62,5 @@ module.exports = {
                     message.channel.send(`You might have the wrong ticker: ${ticker}`);
                 })
         }
-        message.delete({ timeout: 30000 })
-            .then(msg => console.log(`Deleted message from ${msg.author.username}`))
-            .catch(console.error);
     }
 }

@@ -50,7 +50,7 @@ client.on('message', message => {
     const command = args.shift().toLowerCase();
 
     switch (command) {
-        case 'ping':
+        case 'hotel?':
             client.commands.get('ping').execute(message, args);
             break;
         case 'help':
@@ -61,12 +61,16 @@ client.on('message', message => {
             client.commands.get('stock').execute(message, args);
             break;
         case 'addlist':
-        case 'l':
+        case 'al':
         case 'list':
+        case 'l':
         case 'editlist':
+        case 'el':
         case 'listinfo':
         case 'showlists':
+        case 'sl':
         case 'removelist':
+        case 'rl':
             client.commands.get('watchlist').execute(message, client, command, args);
             break;
     }
